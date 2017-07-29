@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class cartmovement : MonoBehaviour {
+public class CarMovement : MonoBehaviour {
+    public bool lock_ = false;
     public float max_forward_vel_ = 50f;
     public float max_reverse_vel_ = 0f;
 
@@ -17,6 +18,17 @@ public class cartmovement : MonoBehaviour {
     private Rigidbody rigid_body_;
     private bool grounded_ = false;
     private bool rotation_locked_ = false;
+    private bool upside_down_ = false;
+
+    public float VelocityBar
+    {
+        get { return new Vector2(rigid_body_.velocity.x, rigid_body_.velocity.z).magnitude / max_forward_vel_; }
+    }
+
+    public bool CanAim
+    {
+        get { return !grounded_ && !rotation_locked_; }
+    }
 
 	void Start () {
         rigid_body_ = GetComponent<Rigidbody>();
@@ -35,11 +47,14 @@ public class cartmovement : MonoBehaviour {
             forward *= 5f;
         }
 
-        rigid_body_.AddForce(gameObject.transform.forward * forward, ForceMode.Acceleration);
+        rigid_body_.velocity += gameObject.transform.forward * acceleration_ * Time.deltaTime * forward;
 
-        bool moving_forward = Vector3.Dot(rigid_body_.velocity, gameObject.transform.forward) > 0;
+        Vector2 vel2d = new Vector2(rigid_body_.velocity.x, rigid_body_.velocity.z);
+        Vector2 forward2d = new Vector2(gameObject.transform.forward.x, gameObject.transform.forward.z);
+
+        bool moving_forward = Vector2.Dot(vel2d, forward2d) > 0;
         float cap = moving_forward ? max_forward_vel_ : max_reverse_vel_;
-        float currvelmag = rigid_body_.velocity.magnitude;
+        float currvelmag = vel2d.magnitude;
 
         float currvel = currvelmag > cap ? cap : currvelmag;
         if (!moving_forward)
@@ -47,7 +62,8 @@ public class cartmovement : MonoBehaviour {
             currvel *= -1;
         }
 
-        rigid_body_.velocity = gameObject.transform.forward * currvel;
+        Vector2 fixed_velocity = forward2d * currvel;
+        rigid_body_.velocity = new Vector3(fixed_velocity.x, 0f, fixed_velocity.y);
 
         float rotate = Input.GetAxis("Horizontal");
 
@@ -66,12 +82,14 @@ public class cartmovement : MonoBehaviour {
     {
         int mask = LayerMask.NameToLayer("Environment");
         grounded_ = Physics.Raycast(gameObject.transform.position, -gameObject.transform.up, grounded_threshold, 1 << mask);
+        upside_down_ = Physics.Raycast(gameObject.transform.position, gameObject.transform.up, grounded_threshold, 1 << mask);
     }
 
     private void UpdateJumpLook()
     {
         if (grounded_ || rotation_locked_)
         {
+
             return;
         }
 
@@ -93,6 +111,17 @@ public class cartmovement : MonoBehaviour {
     }
 
 	void Update () {
+        if (lock_)
+        {
+            return;
+        }
+
+        if(upside_down_)
+        {
+           rigid_body_.velocity = Vector3.zero;
+           rigid_body_.angularVelocity = Vector3.zero;
+        }
+
         CheckGrounded();
         CheckRespawn();
         UpdateMovement();
