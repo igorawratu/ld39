@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 05129a34d218ccb4e8a9d3c1a6b2c813
+timeCreated: 1501431235
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Arcade Interlaced
+  fontNames:
+  - Arcade Interlaced
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

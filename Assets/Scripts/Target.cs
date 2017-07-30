@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 
 public class Target : MonoBehaviour {
     public Animator wall_animator_;
     public Collider wall_collider_;
+    public AudioClip explosion_;
 	void OnTriggerEnter(Collider collider)
     {
         if (wall_collider_ == null)
@@ -19,6 +21,6 @@ public class Target : MonoBehaviour {
         }
         
         wall_animator_.SetBool("blowup", true);
-        Destroy(gameObject);
+        AudioSource.PlayClipAtPoint(explosion_, gameObject.transform.position);
     }
 }

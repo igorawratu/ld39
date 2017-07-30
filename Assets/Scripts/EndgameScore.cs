@@ -27,12 +27,14 @@ public class EndgameScore : MonoBehaviour {
 
             your_score_.text = "Your time: " + yourscore;
 
-            score_list_.text = "Top Scores: \n";
+            score_list_.text = "Top times: \n";
             for (int i = 0; i < scores_.Count; ++i)
             {
                 score_list_.text += scores_[i] + '\n';
             }
         }
+
+        File.WriteAllText("scores.json", JsonUtility.ToJson(scores_));
         
 	}
 
