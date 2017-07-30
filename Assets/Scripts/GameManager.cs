@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour{
     private IEnumerator LoadEndScene()
     {
         times_.Add(time_);
-        File.WriteAllText("start.json", JsonUtility.ToJson(times_));
+        File.WriteAllText("scores.json", JsonUtility.ToJson(times_));
         end_game_.text = "Game Ended";
         for (int i = 5; i < 0; ++i)
         {

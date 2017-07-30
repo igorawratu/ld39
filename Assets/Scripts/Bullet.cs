@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour {
     public void SetBulletVelocity(Vector3 vel)
     {
         vel_ = vel;
-        gameObject.transform.forward = vel.normalized;
+        gameObject.transform.up = vel.normalized;
     }
 
 	void Update () {
@@ -24,6 +24,6 @@ public class Bullet : MonoBehaviour {
         gameObject.transform.position += vel_ * Time.deltaTime;
         travelled_ += vel_.magnitude * Time.deltaTime;
 
-        gameObject.transform.localRotation *= Quaternion.AngleAxis(rotation_speed_ * Time.deltaTime, Vector3.forward);
+        //gameObject.transform.localRotation *= Quaternion.AngleAxis(rotation_speed_ * Time.deltaTime, Vector3.forward);
 	}
 }
