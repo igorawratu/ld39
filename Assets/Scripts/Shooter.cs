@@ -10,6 +10,7 @@ public class Shooter : MonoBehaviour {
     public float cooldown_ = 1f;
     public Rigidbody car_rb_;
     public CarMovement cart_movement_;
+    public AudioClip shooting_sound_;
 
     private float time_since_last_shot_ = 1f;
     
@@ -37,6 +38,7 @@ public class Shooter : MonoBehaviour {
             Bullet bscript = bullet.GetComponent<Bullet>();
             Vector3 vel = bullet_speed_ * gameObject.transform.forward;
             bscript.SetBulletVelocity(vel);
+            AudioSource.PlayClipAtPoint(shooting_sound_, main_camera_.transform.position);
         }
     }
 

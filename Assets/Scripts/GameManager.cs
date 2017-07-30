@@ -6,12 +6,6 @@ using System.IO;
 using UnityEngine.SceneManagement;
 using System;
 
-[Serializable]
-public class Score
-{
-    public float time = 0f;
-}
-
 public class GameManager : MonoBehaviour{
     public Text timer_;
     public Text end_game_;
@@ -20,19 +14,15 @@ public class GameManager : MonoBehaviour{
     
     public CarMovement carmovement_;
     public float time_ = 0f;
+    public float start_time_ = 0f;
 
     private bool ended_ = false;
     private AudioSource audio_source_;
 
-    [SerializeField]
-    private List<Score> times_;
-
     void Start()
     {
-        times_ = new List<Score>();
         audio_source_ = GetComponent<AudioSource>();
-        string jsonstring = File.ReadAllText("scores.json");
-        JsonUtility.FromJsonOverwrite(jsonstring, times_);
+        start_time_ = Time.time;
     }
 
     void Update()
@@ -48,8 +38,8 @@ public class GameManager : MonoBehaviour{
         }
 
         velocity_meter_.fillAmount = carmovement_.VelocityBar;
-        time_ = Time.time;
-        timer_.text = "Time: " + Time.time;
+        time_ = Time.time - start_time_;
+        timer_.text = "Time: " + time_;
     }
 
     private IEnumerator LoadEndScene()
@@ -74,11 +64,7 @@ public class GameManager : MonoBehaviour{
 
         ended_ = true;
         carmovement_.lock_ = true;
-        Score score = new Score();
-        score.time = time_;
-        times_.Add(score);
-        Debug.Log(JsonUtility.ToJson(times_));
-        File.WriteAllText("scores.json", JsonUtility.ToJson(times_));
+        Scores.Instance.scores_.Add(time_);
         StartCoroutine(LoadEndScene());
     }
 }
