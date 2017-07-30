@@ -5,7 +5,20 @@ public class Target : MonoBehaviour {
     public Collider wall_collider_;
 	void OnTriggerEnter(Collider collider)
     {
-        wall_collider_.enabled = false;
+        if (wall_collider_ == null)
+        {
+            var colliders = gameObject.transform.parent.gameObject.GetComponentsInChildren<Collider>();
+            for(int i = 0; i < colliders.Length; ++i)
+            {
+                colliders[i].enabled = false;
+            }
+        }
+        else
+        {
+            wall_collider_.enabled = false;
+        }
+        
         wall_animator_.SetBool("blowup", true);
+        Destroy(gameObject);
     }
 }

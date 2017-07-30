@@ -96,7 +96,7 @@ public class CarMovement : MonoBehaviour {
         float mousex = Input.GetAxis("Mouse X");
         float mousey = Input.GetAxis("Mouse Y");
 
-        gameObject.transform.Rotate(Vector3.right, mousey * Time.deltaTime * look_speed_, Space.Self);
+        gameObject.transform.Rotate(Vector3.right, -mousey * Time.deltaTime * look_speed_, Space.Self);
         gameObject.transform.Rotate(Vector3.up, mousex * Time.deltaTime * look_speed_, Space.World);
     }
 	

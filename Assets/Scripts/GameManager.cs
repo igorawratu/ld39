@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour{
     public float time_ = 0f;
 
     private bool ended_ = false;
-    private List<float> times_;
+
+    public List<float> times_;
 
     void Start()
     {
@@ -38,10 +39,9 @@ public class GameManager : MonoBehaviour{
 
     private IEnumerator LoadEndScene()
     {
-        times_.Add(time_);
-        File.WriteAllText("scores.json", JsonUtility.ToJson(times_));
+        
         end_game_.text = "Game Ended";
-        for (int i = 5; i < 0; ++i)
+        for (int i = 5; i > 0; --i)
         {
             end_game_countdown_.text = "Loading scores in: " + i;
             yield return new WaitForSeconds(1f);
@@ -57,8 +57,10 @@ public class GameManager : MonoBehaviour{
             return;
         }
 
+        ended_ = true;
         carmovement_.lock_ = true;
-
+        times_.Add(time_);
+        File.WriteAllText("scores.json", JsonUtility.ToJson(times_));
         StartCoroutine(LoadEndScene());
     }
 }
